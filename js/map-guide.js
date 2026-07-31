@@ -61,7 +61,10 @@
       const answer = await fetchReply(text);
       setBubble(answer, "answer");
     } catch (_) {
-      setBubble("抱歉，一时语塞。请稍后再问，或换个关于平遥的问题。", "error");
+      setBubble(
+        "连不上豆包。若开着全局梯子，请关掉或把 volces.com 设为直连后再问。",
+        "error"
+      );
     } finally {
       loading = false;
       sendBtn.disabled = false;

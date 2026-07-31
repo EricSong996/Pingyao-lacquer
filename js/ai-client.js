@@ -105,6 +105,8 @@ ${topicConfig.knowledge}`;
 
     const response = await fetch(apiUrl, {
       method: "POST",
+      mode: "cors",
+      cache: "no-store",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${apiKey}`,
@@ -122,8 +124,8 @@ ${topicConfig.knowledge}`;
 
     if (!response.ok) {
       const err = await response.text();
-      console.error("Doubao API error:", err);
-      throw new Error("AI 服务暂时不可用");
+      console.error("Doubao API error:", response.status, err);
+      throw new Error(`AI 服务暂时不可用（${response.status}）`);
     }
 
     const data = await response.json();

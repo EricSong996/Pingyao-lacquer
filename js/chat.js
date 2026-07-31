@@ -134,8 +134,18 @@ class ChatWidget {
       this.hideTyping();
       const errDiv = document.createElement("div");
       errDiv.className = "message message--error";
-      errDiv.textContent =
-        "抱歉，暂时无法获取回答。请稍后再试，或检查 API 配置。";
+      const raw = String(err?.message || err || "");
+      console.error("AI 问答失败:", err);
+      if (/Failed to fetch|NetworkError|Load failed|network/i.test(raw)) {
+        errDiv.textContent =
+          "连不上豆包接口。请先关掉全局梯子（或把 volces.com 设为直连），刷新后再问一次。";
+      } else if (/缺少豆包|配置/i.test(raw)) {
+        errDiv.textContent = "AI 配置未加载，请强制刷新页面（Cmd+Shift+R）后再试。";
+      } else if (/暂时不可用|API/i.test(raw)) {
+        errDiv.textContent = "豆包接口返回错误，请稍后再试或检查密钥是否有效。";
+      } else {
+        errDiv.textContent = `暂时无法回答：${raw || "未知错误"}`;
+      }
       this.messagesEl.appendChild(errDiv);
       this.scrollToBottom();
     } finally {
