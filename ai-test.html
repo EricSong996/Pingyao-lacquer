@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>豆包 API 自测</title>
+  <style>
+    body { font-family: ui-sans-serif, system-ui, sans-serif; max-width: 720px; margin: 24px auto; padding: 0 16px; line-height: 1.5; }
+    button { font-size: 16px; padding: 10px 16px; }
+    pre { background: #111; color: #d8ffd8; padding: 12px; overflow: auto; white-space: pre-wrap; border-radius: 8px; }
+    .ok { color: #0a7; }
+    .bad { color: #c00; }
+  </style>
+</head>
+<body>
+  <h1>豆包 API 自测</h1>
+  <p>打开本页后点按钮。把下面结果截图发我即可定位问题。</p>
+  <button id="run" type="button">开始测试</button>
+  <pre id="out">等待测试…</pre>
+
+  <script src="js/ai-config.js?v=4"></script>
+  <script src="js/ai-client.js?v=4"></script>
+  <script>
+    const out = document.getElementById("out");
+    function log(line, cls) {
+      const div = document.createElement("div");
+      if (cls) div.className = cls;
+      div.textContent = line;
+      out.appendChild(div);
+    }
+    document.getElementById("run").onclick = async () => {
+      out.textContent = "";
+      log("页面地址: " + location.href);
+      const dbg = typeof __AI_DEBUG__ === "function" ? __AI_DEBUG__() : null;
+      log("配置: " + JSON.stringify(dbg, null, 2));
+      if (!dbg?.hasAsk || !dbg?.hasKey) {
+        log("失败：脚本或密钥未加载", "bad");
+        return;
+      }
+      log("正在请求豆包…");
+      try {
+        const answer = await askDoubao("用一句话介绍平遥推光漆器", "lacquer");
+        log("成功！", "ok");
+        log("回答: " + answer, "ok");
+      } catch (err) {
+        log("失败：" + (err && err.message ? err.message : err), "bad");
+        console.error(err);
+      }
+    };
+  </script>
+</body>
+</html>

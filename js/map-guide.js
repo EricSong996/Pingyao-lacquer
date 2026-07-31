@@ -41,11 +41,10 @@
   }
 
   async function fetchReply(question) {
-    if (typeof askDoubao === "function") {
-      return await askDoubao(question, TOPIC);
+    if (typeof askDoubao !== "function") {
+      throw new Error("AI 脚本未加载");
     }
-    await new Promise((r) => setTimeout(r, 500 + Math.random() * 400));
-    return mockReply(question);
+    return await askDoubao(question, TOPIC);
   }
 
   async function send() {

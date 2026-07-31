@@ -136,15 +136,13 @@ class ChatWidget {
       errDiv.className = "message message--error";
       const raw = String(err?.message || err || "");
       console.error("AI 问答失败:", err);
-      if (/Failed to fetch|NetworkError|Load failed|network/i.test(raw)) {
+      if (/Failed to fetch|NetworkError|Load failed|网络|跨域/i.test(raw)) {
         errDiv.textContent =
-          "连不上豆包接口。请先关掉全局梯子（或把 volces.com 设为直连），刷新后再问一次。";
-      } else if (/缺少豆包|配置/i.test(raw)) {
-        errDiv.textContent = "AI 配置未加载，请强制刷新页面（Cmd+Shift+R）后再试。";
-      } else if (/暂时不可用|API/i.test(raw)) {
-        errDiv.textContent = "豆包接口返回错误，请稍后再试或检查密钥是否有效。";
+          "豆包请求被浏览器拦截。请打开 ai-test.html 看具体原因（不一定是梯子）。";
+      } else if (/缺少豆包|未加载|配置/i.test(raw)) {
+        errDiv.textContent = "AI 配置未加载，请强制刷新（Cmd+Shift+R）。";
       } else {
-        errDiv.textContent = `暂时无法回答：${raw || "未知错误"}`;
+        errDiv.textContent = raw || "暂时无法获取回答";
       }
       this.messagesEl.appendChild(errDiv);
       this.scrollToBottom();
@@ -187,31 +185,11 @@ class ChatWidget {
 
     const topic = CHAT_CONFIG.topic || "lacquer";
 
-    // GitHub Pages / 纯前端：浏览器直调豆包（失败直接抛错，不再悄悄用模拟回答）
-    if (CHAT_CONFIG.directMode !== false && typeof askDoubao === "function") {
-      return await askDoubao(question, topic);
+    // GitHub Pages 必须走前端直调；不要回退到 /api/chat（项目页路径会错）
+    if (typeof askDoubao !== "function") {
+      throw new Error("AI 脚本未加载（askDoubao 不存在），请强制刷新");
     }
-
-    const apiUrl = this.resolveApiUrl();
-    let response;
-    try {
-      response = await fetch(apiUrl, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ question, topic }),
-      });
-    } catch (err) {
-      console.warn("API 请求失败，使用本地模拟回答:", err);
-      await delay(500);
-      return this.getMockReply(question);
-    }
-
-    if (!response.ok) {
-      throw new Error(`API error: ${response.status}`);
-    }
-
-    const data = await response.json();
-    return data.answer;
+    return await askDoubao(question, topic);
   }
 }
 
