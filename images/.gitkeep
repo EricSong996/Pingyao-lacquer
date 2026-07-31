@@ -1,0 +1,4 @@
+images/
+# 将社会实践拍摄的照片放在此目录
+# 建议命名：photo-01.jpg, photo-02.jpg, ...
+# 然后在 js/config.js 中配置对应路径

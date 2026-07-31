@@ -1,0 +1,153 @@
+/* 车间参观：左侧纯文字入口 + 视频二级页 */
+
+.tour-entry {
+  position: fixed;
+  left: 1.5rem;
+  bottom: 5.6rem;
+  z-index: 200;
+  border: none;
+  background: transparent;
+  padding: 0.45rem 0.15rem;
+  cursor: pointer;
+  font-family: var(--font-serif);
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.28em;
+  text-indent: 0.28em;
+  color: var(--color-gold);
+  text-shadow:
+    0 1px 0 rgba(26, 20, 16, 0.35),
+    0 0 18px rgba(201, 162, 39, 0.35);
+  transition:
+    color 0.3s ease,
+    letter-spacing 0.3s ease,
+    text-shadow 0.3s ease,
+    transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.tour-entry:hover,
+.tour-entry:focus-visible {
+  color: #f3e0a0;
+  letter-spacing: 0.36em;
+  text-indent: 0.36em;
+  text-shadow:
+    0 1px 0 rgba(26, 20, 16, 0.4),
+    0 0 22px rgba(232, 197, 71, 0.55);
+  transform: translateY(-1px);
+  outline: none;
+}
+
+.tour-entry__text {
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.tour-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 320;
+  display: flex;
+  flex-direction: column;
+  background: #0e0a08;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition:
+    opacity 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+    visibility 0.45s;
+}
+
+.tour-overlay.is-open {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.tour-overlay__bar {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.85rem 1.25rem;
+  background: linear-gradient(180deg, rgba(20, 12, 8, 0.92), rgba(20, 12, 8, 0.55));
+}
+
+.tour-overlay__title {
+  font-family: var(--font-serif);
+  font-size: 1rem;
+  letter-spacing: 0.22em;
+  text-indent: 0.22em;
+  color: #f3e6cf;
+}
+
+.tour-overlay__close {
+  border: 1px solid rgba(243, 230, 207, 0.28);
+  background: transparent;
+  color: #f3e6cf;
+  font-family: var(--font-serif);
+  font-size: 0.9rem;
+  letter-spacing: 0.18em;
+  text-indent: 0.18em;
+  padding: 0.4rem 0.9rem;
+  cursor: pointer;
+  transition:
+    background 0.25s ease,
+    border-color 0.25s ease,
+    color 0.25s ease;
+}
+
+.tour-overlay__close:hover,
+.tour-overlay__close:focus-visible {
+  background: rgba(243, 230, 207, 0.1);
+  border-color: rgba(232, 197, 71, 0.55);
+  color: #f7edd8;
+  outline: none;
+}
+
+.tour-overlay__stage {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 1rem 1.25rem;
+}
+
+.tour-overlay__video {
+  width: min(100%, 1200px);
+  max-height: 100%;
+  background: #000;
+  border-radius: 4px;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.45);
+}
+
+@media (max-width: 720px) {
+  .tour-entry {
+    left: 1rem;
+    bottom: 4.8rem;
+    font-size: 0.82rem;
+    letter-spacing: 0.18em;
+    text-indent: 0.18em;
+  }
+
+  .tour-entry:hover,
+  .tour-entry:focus-visible {
+    letter-spacing: 0.24em;
+    text-indent: 0.24em;
+  }
+
+  .tour-overlay__bar {
+    padding: 0.7rem 0.85rem;
+  }
+
+  .tour-overlay__title {
+    font-size: 0.88rem;
+    letter-spacing: 0.14em;
+    text-indent: 0.14em;
+  }
+
+  .tour-overlay__stage {
+    padding: 0.35rem 0.55rem 0.85rem;
+  }
+}

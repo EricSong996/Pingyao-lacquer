@@ -1,0 +1,6 @@
+.vercel
+.env
+.env.local
+*.local
+videos/*.mp4
+!videos/.gitkeep

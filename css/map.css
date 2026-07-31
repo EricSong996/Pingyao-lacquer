@@ -1,0 +1,593 @@
+:root {
+  --map-ink: #2a2218;
+  --map-gold: #c9a227;
+  --font-serif: "Noto Serif SC", "Songti SC", serif;
+  --font-sans: "Noto Sans SC", "PingFang SC", sans-serif;
+  --ease-apple: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-apple-io: cubic-bezier(0.4, 0, 0.2, 1);
+  --duration-overlay: 0.62s;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  font-family: var(--font-sans);
+  color: var(--map-ink);
+  background:
+    radial-gradient(ellipse at 50% 28%, #ecd9b8 0%, transparent 52%),
+    linear-gradient(160deg, #b8956a 0%, #8a6a45 45%, #5c4330 100%);
+  overflow: hidden;
+}
+
+.map-page {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  /* 右侧给书生对话留空，地图视觉略偏左 */
+  padding: 1rem 11.5rem 1.5rem 1rem;
+  gap: 0.75rem;
+  transform: translateZ(0) scale(1);
+  filter: brightness(1);
+  transition:
+    transform var(--duration-overlay) var(--ease-apple),
+    filter var(--duration-overlay) var(--ease-apple-io);
+  will-change: transform, filter;
+}
+
+.map-page.is-recessed {
+  transform: scale(0.972);
+  filter: brightness(0.78) saturate(0.92);
+}
+
+.map-hint {
+  text-align: center;
+  color: rgba(42, 34, 24, 0.88);
+  font-size: 0.9rem;
+  letter-spacing: 0.06em;
+  text-shadow: 0 1px 0 rgba(255, 245, 220, 0.35);
+  transition: opacity 0.45s var(--ease-apple-io);
+}
+
+.map-page.is-recessed .map-hint {
+  opacity: 0.35;
+}
+
+.map-hint p {
+  font-family: var(--font-serif);
+}
+
+.map-stage {
+  position: relative;
+  /* 略收窄，给右侧书生腾位 */
+  width: min(90vw, 1000px);
+  max-width: calc(100vw - 13.5rem);
+  aspect-ratio: 1024 / 576;
+  border-radius: 6px;
+  box-shadow:
+    0 18px 50px rgba(30, 18, 8, 0.45),
+    0 0 0 1px rgba(80, 55, 30, 0.35);
+  overflow: visible;
+  background: #c9b089;
+  animation: map-enter 0.95s var(--ease-apple) both;
+}
+
+@keyframes map-enter {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.982);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.map-stage__image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+  user-select: none;
+  pointer-events: none;
+  border-radius: 6px;
+  /* 插画放大时尽量保持锐利 */
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: high-quality;
+  -ms-interpolation-mode: nearest-neighbor;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+}
+
+.map-hotspot {
+  --x: 0%;
+  --y: 0%;
+  --w: 10%;
+  --h: 10%;
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  width: var(--w);
+  height: var(--h);
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  z-index: 2;
+  padding: 0;
+  overflow: visible;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.map-hotspot:focus-visible {
+  outline: none;
+}
+
+.map-hotspot__lens {
+  position: absolute;
+  inset: 0;
+  border-radius: 10px;
+  background-image: url("../images/pingyao-map.png?v=2");
+  background-repeat: no-repeat;
+  /* 由 JS 写入精确 background-size / position，与底图对齐 */
+  background-size: 0 0;
+  background-position: 0 0;
+  transform: scale(1);
+  transform-origin: center center;
+  transition:
+    transform 0.55s var(--ease-apple),
+    filter 0.55s var(--ease-apple),
+    box-shadow 0.55s var(--ease-apple);
+  will-change: transform;
+  pointer-events: none;
+  box-shadow: 0 0 0 0 transparent;
+}
+
+.map-hotspot:hover .map-hotspot__lens,
+.map-hotspot:focus-visible .map-hotspot__lens {
+  transform: scale(1.055);
+  filter: brightness(1.04) contrast(1.02);
+  box-shadow:
+    0 10px 28px rgba(40, 24, 10, 0.22),
+    0 0 0 1px rgba(201, 162, 39, 0.28);
+}
+
+.map-hotspot--active .map-hotspot__lens {
+  /* 轻微可进时轻微描边，不抢戏 */
+  box-shadow: 0 0 0 0 rgba(255, 210, 80, 0);
+}
+
+.map-hotspot--active:hover .map-hotspot__lens,
+.map-hotspot--active:focus-visible .map-hotspot__lens {
+  box-shadow:
+    0 12px 30px rgba(40, 24, 10, 0.26),
+    0 0 0 1.5px rgba(255, 210, 90, 0.45);
+}
+
+.map-hotspot__tip {
+  position: absolute;
+  left: 50%;
+  bottom: -0.15rem;
+  transform: translateX(-50%) translateY(6px);
+  white-space: nowrap;
+  padding: 0.22rem 0.6rem;
+  border-radius: 999px;
+  background: rgba(163, 29, 29, 0.92);
+  color: #fff8e8;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    opacity 0.4s var(--ease-apple),
+    transform 0.4s var(--ease-apple);
+  z-index: 3;
+}
+
+.map-hotspot--active:hover .map-hotspot__tip,
+.map-hotspot--active:focus-visible .map-hotspot__tip {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+.map-toast {
+  position: fixed;
+  left: 50%;
+  bottom: 1.75rem;
+  transform: translateX(-50%) translateY(10px);
+  z-index: 40;
+  padding: 0.7rem 1.15rem;
+  border-radius: 8px;
+  background: rgba(42, 34, 24, 0.92);
+  color: #f3e6cf;
+  font-size: 0.9rem;
+  letter-spacing: 0.04em;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.28);
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    opacity 0.4s var(--ease-apple),
+    transform 0.4s var(--ease-apple);
+}
+
+.map-toast.is-visible {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+.spot-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  pointer-events: none;
+  visibility: hidden;
+}
+
+.spot-overlay.is-open {
+  pointer-events: auto;
+  visibility: visible;
+}
+
+.spot-overlay__veil {
+  position: absolute;
+  inset: 0;
+  background: rgba(18, 12, 8, 0.42);
+  opacity: 0;
+  transition: opacity var(--duration-overlay) var(--ease-apple-io);
+}
+
+.spot-overlay.is-open .spot-overlay__veil {
+  opacity: 1;
+}
+
+.spot-overlay__panel {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  background: #1a1410;
+  opacity: 0;
+  transform: translateY(18px) scale(0.985);
+  transition:
+    opacity var(--duration-overlay) var(--ease-apple),
+    transform var(--duration-overlay) var(--ease-apple);
+  will-change: opacity, transform;
+  box-shadow: 0 -8px 40px rgba(0, 0, 0, 0.35);
+}
+
+.spot-overlay.is-open .spot-overlay__panel {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.spot-overlay.is-closing .spot-overlay__panel {
+  opacity: 0;
+  transform: translateY(14px) scale(0.988);
+}
+
+.spot-overlay.is-closing .spot-overlay__veil {
+  opacity: 0;
+}
+
+.spot-overlay__bar {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.65rem 1.1rem;
+  background: linear-gradient(90deg, #5c0f0f, #8b1a1a 45%, #5c0f0f);
+  border-bottom: 1px solid rgba(201, 162, 39, 0.35);
+}
+
+.spot-overlay__title {
+  font-family: var(--font-serif);
+  color: #f3e6cf;
+  letter-spacing: 0.12em;
+  font-size: 0.95rem;
+}
+
+.spot-overlay__close {
+  border: 1px solid rgba(243, 230, 207, 0.45);
+  background: rgba(255, 255, 255, 0.06);
+  color: #f3e6cf;
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  letter-spacing: 0.08em;
+  padding: 0.35rem 0.85rem;
+  border-radius: 999px;
+  cursor: pointer;
+  transition:
+    background 0.35s var(--ease-apple-io),
+    border-color 0.35s var(--ease-apple-io),
+    transform 0.35s var(--ease-apple);
+}
+
+.spot-overlay__close:hover,
+.spot-overlay__close:focus-visible {
+  background: rgba(201, 162, 39, 0.22);
+  border-color: var(--map-gold);
+  outline: none;
+  transform: scale(1.03);
+}
+
+.spot-overlay__frame {
+  flex: 1 1 auto;
+  width: 100%;
+  border: 0;
+  background: #1a1410;
+  min-height: 0;
+  opacity: 0;
+  transition: opacity 0.45s var(--ease-apple-io) 0.12s;
+}
+
+.spot-overlay.is-open .spot-overlay__frame {
+  opacity: 1;
+}
+
+.spot-overlay.is-closing .spot-overlay__frame {
+  opacity: 0;
+  transition-delay: 0s;
+}
+
+@media (max-width: 720px) {
+  .map-page {
+    padding: 0.6rem 7.2rem 0.7rem 0.5rem;
+  }
+
+  .map-hint {
+    font-size: 0.78rem;
+  }
+
+  .map-stage {
+    width: min(100%, calc(100vw - 7.6rem));
+    max-width: none;
+  }
+
+  .map-hotspot__tip {
+    display: none;
+  }
+
+  .map-hotspot:hover .map-hotspot__lens,
+  .map-hotspot:focus-visible .map-hotspot__lens {
+    transform: scale(1.04);
+  }
+
+  .spot-overlay__title {
+    font-size: 0.82rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .map-page,
+  .map-stage,
+  .map-hotspot__lens,
+  .map-hotspot__tip,
+  .map-toast,
+  .spot-overlay__veil,
+  .spot-overlay__panel,
+  .spot-overlay__frame,
+  .spot-overlay__close,
+  .map-guide,
+  .map-guide__bubble,
+  .map-guide__figure {
+    animation: none !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ===== 主地图 · 古风书生 AI ===== */
+.map-guide {
+  position: fixed;
+  right: 0.85rem;
+  bottom: 0.55rem;
+  z-index: 50;
+  width: 148px;
+  max-height: calc(100vh - 0.8rem);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.15rem;
+  pointer-events: none;
+  animation: map-guide-enter 0.9s var(--ease-apple) 0.25s both;
+  transition: opacity 0.4s var(--ease-apple-io), transform 0.4s var(--ease-apple);
+}
+
+body:has(.spot-overlay.is-open) .map-guide,
+body:has(.spot-overlay.is-closing) .map-guide {
+  opacity: 0;
+  transform: translateY(10px);
+  pointer-events: none;
+}
+
+@keyframes map-guide-enter {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.map-guide__bubble {
+  pointer-events: auto;
+  position: relative;
+  width: min(210px, 30vw);
+  max-height: min(7.2rem, 26vh);
+  overflow-y: auto;
+  margin-bottom: 0.1rem;
+  margin-right: 0.35rem;
+  align-self: flex-end;
+  padding: 0.6rem 0.7rem;
+  border-radius: 10px 10px 10px 4px;
+  background: rgba(255, 248, 232, 0.94);
+  color: #2a2218;
+  font-family: var(--font-serif);
+  font-size: 0.8rem;
+  line-height: 1.55;
+  letter-spacing: 0.04em;
+  box-shadow:
+    0 8px 22px rgba(40, 24, 10, 0.22),
+    0 0 0 1px rgba(120, 85, 45, 0.18);
+  scrollbar-width: thin;
+  flex-shrink: 1;
+  min-height: 0;
+}
+
+.map-guide__bubble::after {
+  content: "";
+  position: absolute;
+  left: 58%;
+  bottom: -7px;
+  width: 12px;
+  height: 12px;
+  background: rgba(255, 248, 232, 0.94);
+  transform: rotate(45deg);
+  box-shadow: 2px 2px 0 rgba(120, 85, 45, 0.08);
+}
+
+.map-guide__bubble[data-mode="thinking"] {
+  color: rgba(42, 34, 24, 0.62);
+  font-style: italic;
+}
+
+.map-guide__bubble[data-mode="error"] {
+  color: #7a2e2e;
+}
+
+.map-guide__figure {
+  pointer-events: none;
+  filter: drop-shadow(0 10px 14px rgba(30, 18, 8, 0.28));
+  animation: map-guide-bob 3.8s ease-in-out infinite;
+}
+
+.map-guide__scholar {
+  display: block;
+  width: 112px;
+  height: auto;
+  user-select: none;
+  -webkit-user-drag: none;
+  flex-shrink: 0;
+}
+
+@keyframes map-guide-bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+.map-guide__form {
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  width: 100%;
+  padding: 0.2rem;
+}
+
+.map-guide__input {
+  flex: 1;
+  min-width: 0;
+  height: 34px;
+  padding: 0 0.65rem;
+  border: 1px solid rgba(90, 60, 30, 0.28);
+  border-radius: 8px;
+  background: rgba(255, 248, 232, 0.9);
+  color: #2a2218;
+  font-family: var(--font-serif);
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+  outline: none;
+  transition:
+    border-color 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.map-guide__input::placeholder {
+  color: rgba(42, 34, 24, 0.42);
+}
+
+.map-guide__input:focus {
+  border-color: rgba(163, 29, 29, 0.55);
+  box-shadow: 0 0 0 3px rgba(163, 29, 29, 0.12);
+}
+
+.map-guide__send {
+  flex-shrink: 0;
+  width: 34px;
+  height: 34px;
+  border: none;
+  border-radius: 8px;
+  background: linear-gradient(160deg, #8b1a1a, #5c0f0f);
+  color: #f7edd8;
+  font-family: var(--font-serif);
+  font-size: 0.85rem;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  transition: transform 0.25s var(--ease-apple), filter 0.25s ease;
+}
+
+.map-guide__send:hover,
+.map-guide__send:focus-visible {
+  transform: translateY(-1px);
+  filter: brightness(1.08);
+  outline: none;
+}
+
+.map-guide__send:disabled {
+  opacity: 0.55;
+  cursor: default;
+  transform: none;
+}
+
+@media (max-width: 720px) {
+  .map-guide {
+    right: 0.35rem;
+    bottom: 0.35rem;
+    width: 112px;
+  }
+
+  .map-guide__bubble {
+    width: min(150px, 42vw);
+    max-height: min(5.8rem, 22vh);
+    font-size: 0.72rem;
+    padding: 0.5rem 0.55rem;
+  }
+
+  .map-guide__scholar {
+    width: 92px;
+  }
+
+  .map-guide__input,
+  .map-guide__send {
+    height: 30px;
+  }
+
+  .map-guide__send {
+    width: 30px;
+    font-size: 0.78rem;
+  }
+}

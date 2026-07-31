@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="数游晋中 · 平遥古城可交互地图，探索推光漆器与古城名胜" />
+  <title>数游晋中 · 平遥古城</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@500;700&family=Noto+Sans+SC:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/map.css" />
+</head>
+<body>
+  <div class="map-page" id="map-page">
+    <header class="map-hint" aria-live="polite">
+      <p>点击地图上的景点开始探索 · 已开放：推光漆器博物馆、日升昌票号</p>
+    </header>
+
+    <div class="map-stage" id="map-stage">
+      <img
+        class="map-stage__image"
+        id="map-image"
+        src="images/pingyao-map.png?v=2"
+        alt="平遥古城可交互地图：数游晋中 · 智活古韵"
+        width="1024"
+        height="576"
+        decoding="sync"
+        fetchpriority="high"
+        draggable="false"
+      />
+
+      <!-- --x/--y/--w/--h 为相对整图百分比；镜头层用于悬停微放大 -->
+      <button
+        class="map-hotspot map-hotspot--active"
+        type="button"
+        data-spot="museum"
+        style="--x: 28%; --y: 20%; --w: 13%; --h: 22%;"
+        aria-label="进入平遥推光漆器博物馆"
+      >
+        <span class="map-hotspot__lens" aria-hidden="true"></span>
+        <span class="map-hotspot__tip">进入专题</span>
+      </button>
+
+      <button
+        class="map-hotspot map-hotspot--active"
+        type="button"
+        data-spot="rishengchang"
+        style="--x: 54%; --y: 33%; --w: 12%; --h: 20%;"
+        aria-label="进入日升昌票号"
+      >
+        <span class="map-hotspot__lens" aria-hidden="true"></span>
+        <span class="map-hotspot__tip">进入专题</span>
+      </button>
+
+      <button
+        class="map-hotspot"
+        type="button"
+        data-spot="yamen"
+        style="--x: 35%; --y: 57%; --w: 12%; --h: 20%;"
+        aria-label="县衙（即将开放）"
+      >
+        <span class="map-hotspot__lens" aria-hidden="true"></span>
+      </button>
+
+      <button
+        class="map-hotspot"
+        type="button"
+        data-spot="chenghuang"
+        style="--x: 63%; --y: 58%; --w: 12%; --h: 20%;"
+        aria-label="城隍庙（即将开放）"
+      >
+        <span class="map-hotspot__lens" aria-hidden="true"></span>
+      </button>
+    </div>
+  </div>
+
+  <div class="map-toast" id="map-toast" hidden role="status"></div>
+
+  <!-- 古风书生 AI 向导 -->
+  <aside class="map-guide" id="map-guide" aria-label="平遥古城 AI 向导">
+    <div class="map-guide__bubble" id="map-guide-bubble" role="status" aria-live="polite">
+      关于平遥古城，你有什么想问的吗？
+    </div>
+
+    <div class="map-guide__figure" aria-hidden="true">
+      <img
+        class="map-guide__scholar"
+        src="images/map-guide-scholar.png?v=1"
+        alt=""
+        width="112"
+        height="195"
+        draggable="false"
+      />
+    </div>
+
+    <form class="map-guide__form" id="map-guide-form" autocomplete="off">
+      <input
+        class="map-guide__input"
+        id="map-guide-input"
+        type="text"
+        maxlength="120"
+        placeholder="请问书生…"
+        aria-label="向书生提问"
+      />
+      <button class="map-guide__send" id="map-guide-send" type="submit" aria-label="发送">问</button>
+    </form>
+  </aside>
+
+  <div
+    class="spot-overlay"
+    id="spot-overlay"
+    aria-hidden="true"
+  >
+    <div class="spot-overlay__veil" aria-hidden="true"></div>
+    <div class="spot-overlay__panel">
+      <div class="spot-overlay__bar">
+        <span class="spot-overlay__title">平遥推光漆器博物馆</span>
+        <button class="spot-overlay__close" id="spot-close" type="button" aria-label="关闭并返回地图">
+          返回地图
+        </button>
+      </div>
+      <iframe
+        class="spot-overlay__frame"
+        id="spot-frame"
+        title="推光漆器专题"
+        src="about:blank"
+      ></iframe>
+    </div>
+  </div>
+
+  <script src="js/ai-config.js"></script>
+  <script src="js/ai-client.js"></script>
+  <script src="js/map.js"></script>
+  <script src="js/map-guide.js"></script>
+</body>
+</html>

@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="平遥推光漆器博物馆专题 — 探索千年非遗工艺之美" />
+  <title>平遥推光漆器博物馆 | 数游晋中</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/workshop.css" />
+  <link rel="stylesheet" href="css/workshop-tour.css" />
+</head>
+<body>
+
+  <!-- 顶部导航 -->
+  <nav class="navbar">
+    <a class="navbar__logo" href="#intro">推光漆器</a>
+    <button class="navbar__back" id="back-to-map" type="button">返回地图</button>
+  </nav>
+
+  <!-- 左侧：车间参观（纯文字高亮入口） -->
+  <button class="tour-entry" id="tour-entry" type="button" aria-label="打开车间参观视频">
+    <span class="tour-entry__text">车间参观</span>
+  </button>
+
+  <!-- 左侧：动手体验入口 -->
+  <button class="workshop-entry" id="workshop-entry" type="button" aria-label="打开推光工艺模拟体验">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+      <path d="M12 3v3M8 6l8 12M16 6L8 18" />
+      <path d="M5 21h14" />
+      <path d="M9 10h6" />
+    </svg>
+    <span class="workshop-entry__text">动手体验</span>
+  </button>
+
+  <!-- 滚屏照片区块（由 JS 动态渲染） -->
+  <main id="hero-sections"></main>
+
+  <!-- 页脚 -->
+  <footer class="footer-section">
+    <p class="footer-section__text">
+      <strong>平遥推光漆器</strong> · 国家级非物质文化遗产<br />
+      社会实践专题网站 · 探索千年工艺 · 传承非遗文化
+    </p>
+  </footer>
+
+  <!-- 右侧章节导航 -->
+  <nav class="chapter-nav" id="chapter-nav" aria-label="章节导航">
+    <div class="chapter-nav__panel">
+      <button
+        class="chapter-nav__toggle"
+        id="chapter-nav-toggle"
+        type="button"
+        aria-label="展开章节导航"
+        aria-expanded="false"
+        aria-controls="chapter-nav-list"
+      >
+        <span class="chapter-nav__circle" aria-hidden="true"></span>
+      </button>
+      <ul class="chapter-nav__list" id="chapter-nav-list" aria-hidden="true"></ul>
+    </div>
+  </nav>
+
+  <!-- AI 悬浮聊天窗 -->
+  <div class="chat-widget" id="chat-widget">
+    <!-- 聊天面板 -->
+    <div class="chat-panel" id="chat-panel" role="dialog" aria-label="AI 问答助手">
+      <div class="chat-panel__header">
+        <div class="chat-panel__header-info">
+          <div class="chat-panel__avatar">漆</div>
+          <div>
+            <div class="chat-panel__title">推光漆器 AI 助手</div>
+            <div class="chat-panel__subtitle">为您答疑解惑</div>
+          </div>
+        </div>
+        <button class="chat-panel__close" id="chat-close" aria-label="关闭聊天">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M18 6L6 18M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+
+      <div class="chat-panel__messages" id="chat-messages"></div>
+
+      <div class="chat-panel__quick" id="chat-quick"></div>
+
+      <div class="chat-panel__input-area">
+        <textarea
+          class="chat-panel__input"
+          id="chat-input"
+          placeholder="请输入您的问题…"
+          rows="1"
+          aria-label="输入问题"
+        ></textarea>
+        <button class="chat-panel__send" id="chat-send" aria-label="发送">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- 悬浮按钮 -->
+    <button class="chat-widget__toggle" id="chat-toggle" aria-label="打开 AI 问答">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
+      </svg>
+      <span class="chat-widget__toggle-text">AI 答疑</span>
+    </button>
+  </div>
+
+  <!-- 推光工艺模拟体验 -->
+  <div class="workshop-overlay" id="workshop-overlay" aria-hidden="true">
+    <div class="workshop-cover">
+      <div class="workshop-cover__wood" aria-hidden="true"></div>
+      <div class="workshop-cover__veil" aria-hidden="true"></div>
+
+      <div class="workshop-screen is-active" id="workshop-screen-cover" data-screen="cover">
+        <h1 class="workshop-cover__title">推光工艺模拟体验</h1>
+        <div class="workshop-cover__actions">
+          <button class="workshop-text-btn" id="workshop-start" type="button">开始游戏</button>
+          <button class="workshop-text-btn" id="workshop-exit" type="button">退出</button>
+        </div>
+      </div>
+
+      <div class="workshop-screen" id="workshop-screen-levels" data-screen="levels">
+        <h2 class="workshop-cover__title workshop-cover__title--sub">选择体验项目</h2>
+        <div class="workshop-cover__actions">
+          <button class="workshop-text-btn" type="button" data-level="box">漆器盒描金</button>
+          <button class="workshop-text-btn" type="button" data-level="bracelet">手镯推光</button>
+          <button class="workshop-text-btn" type="button" data-level="bookmark">书签打磨</button>
+          <button class="workshop-text-btn workshop-text-btn--back" id="workshop-levels-back" type="button">返回</button>
+        </div>
+      </div>
+
+      <div class="workshop-screen workshop-screen--game" id="workshop-screen-game" data-screen="game">
+        <img
+          class="workshop-box-img"
+          id="workshop-box-img"
+          src="images/lacquer-box.png?v=1785417200"
+          alt="漆器盒"
+          draggable="false"
+        />
+        <canvas id="workshop-canvas" aria-label="漆器盒描金画布"></canvas>
+        <div class="workshop-brush" id="workshop-brush" aria-hidden="true">
+          <img
+            src="images/workshop-brush.png?v=1"
+            alt=""
+            width="150"
+            height="175"
+            draggable="false"
+          />
+        </div>
+        <div class="workshop-game-ui">
+          <p class="workshop-game-hint">单击或拖动描金</p>
+          <button class="workshop-text-btn workshop-text-btn--back" id="workshop-game-back" type="button">返回</button>
+        </div>
+      </div>
+
+      <div class="workshop-screen workshop-screen--bookmark" id="workshop-screen-bookmark" data-screen="bookmark">
+        <img
+          class="workshop-bookmark-after"
+          id="workshop-bookmark-after"
+          src="images/bookmark-after.png?v=1"
+          alt=""
+          draggable="false"
+        />
+        <canvas id="workshop-polish-canvas" aria-label="书签打磨画布"></canvas>
+        <div class="workshop-sandpaper" id="workshop-sandpaper" aria-hidden="true">
+          <img src="images/sandpaper.png?v=1" alt="" width="52" height="52" draggable="false" />
+        </div>
+        <div class="workshop-game-ui">
+          <p class="workshop-game-hint">按住并拖动砂纸打磨</p>
+          <button class="workshop-text-btn workshop-text-btn--back" id="workshop-bookmark-back" type="button">返回</button>
+        </div>
+      </div>
+
+      <div class="workshop-screen workshop-screen--bracelet" id="workshop-screen-bracelet" data-screen="bracelet">
+        <img
+          class="bracelet-desk"
+          id="bracelet-desk"
+          src="images/bracelet-desk.png?v=1"
+          alt=""
+          draggable="false"
+        />
+        <div class="bracelet-piece" id="bracelet-piece">
+          <img
+            class="bracelet-shiny"
+            id="bracelet-shiny"
+            src="images/bracelet-shiny.png?v=1"
+            alt="手镯"
+            draggable="false"
+          />
+          <canvas id="bracelet-dust-canvas" aria-hidden="true"></canvas>
+        </div>
+        <div class="workshop-sandpaper" id="bracelet-sandpaper" aria-hidden="true">
+          <img src="images/sandpaper.png?v=1" alt="" width="48" height="48" draggable="false" />
+        </div>
+        <div class="workshop-game-ui">
+          <p class="bracelet-mode-label" id="bracelet-mode-label">模式：移动沾粉</p>
+          <p class="workshop-game-hint">拖动手镯到碗里沾粉 · 右键切换砂纸</p>
+          <button class="workshop-text-btn workshop-text-btn--back" id="workshop-bracelet-back" type="button">返回</button>
+        </div>
+      </div>
+
+      <p class="workshop-toast" id="workshop-toast" role="status"></p>
+    </div>
+  </div>
+
+  <!-- 车间参观视频二级页 -->
+  <div class="tour-overlay" id="tour-overlay" aria-hidden="true">
+    <div class="tour-overlay__bar">
+      <span class="tour-overlay__title">车间参观</span>
+      <button class="tour-overlay__close" id="tour-close" type="button">退出</button>
+    </div>
+    <div class="tour-overlay__stage">
+      <video
+        class="tour-overlay__video"
+        id="tour-video"
+        controls
+        playsinline
+        preload="metadata"
+        controlslist="nodownload"
+        src="videos/workshop-tour.mp4"
+      >
+        您的浏览器暂不支持视频播放。
+      </video>
+    </div>
+  </div>
+
+  <script src="js/ai-config.js"></script>
+  <script src="js/ai-client.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/knowledge.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/chat.js"></script>
+  <script src="js/workshop.js"></script>
+  <script src="js/workshop-paint.js?v=16"></script>
+  <script src="js/workshop-polish.js?v=4"></script>
+  <script src="js/workshop-bracelet.js?v=10"></script>
+  <script src="js/workshop-tour.js"></script>
+  <script>
+    document.getElementById("back-to-map")?.addEventListener("click", () => {
+      if (window.parent && window.parent !== window) {
+        window.parent.postMessage("close-spot-overlay", "*");
+        return;
+      }
+      window.location.href = "index.html";
+    });
+  </script>
+</body>
+</html>

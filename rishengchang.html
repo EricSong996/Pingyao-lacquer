@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="日升昌票号专题 — 汇通天下的金融史" />
+  <title>日升昌票号 | 数游晋中</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@400;600;700&family=ZCOOL+XiaoWei&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body class="page-rishengchang">
+
+  <nav class="navbar">
+    <a class="navbar__logo" href="#intro">日升昌</a>
+    <button class="navbar__back" id="back-to-map" type="button">返回地图</button>
+  </nav>
+
+  <main id="hero-sections"></main>
+
+  <footer class="footer-section">
+    <p class="footer-section__text">
+      <strong>日升昌票号</strong> · 中国票号博物馆<br />
+      数游晋中 · 汇通天下 · 走近近代金融史
+    </p>
+  </footer>
+
+  <nav class="chapter-nav" id="chapter-nav" aria-label="章节导航">
+    <div class="chapter-nav__panel">
+      <button
+        class="chapter-nav__toggle"
+        id="chapter-nav-toggle"
+        type="button"
+        aria-label="展开章节导航"
+        aria-expanded="false"
+        aria-controls="chapter-nav-list"
+      >
+        <span class="chapter-nav__circle" aria-hidden="true"></span>
+      </button>
+      <ul class="chapter-nav__list" id="chapter-nav-list" aria-hidden="true"></ul>
+    </div>
+  </nav>
+
+  <!-- AI 悬浮聊天窗 -->
+  <div class="chat-widget" id="chat-widget">
+    <div class="chat-panel" id="chat-panel" role="dialog" aria-label="AI 问答助手">
+      <div class="chat-panel__header">
+        <div class="chat-panel__header-info">
+          <div class="chat-panel__avatar">票</div>
+          <div>
+            <div class="chat-panel__title">日升昌 AI 助手</div>
+            <div class="chat-panel__subtitle">汇通天下 · 答疑解惑</div>
+          </div>
+        </div>
+        <button class="chat-panel__close" id="chat-close" aria-label="关闭聊天">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M18 6L6 18M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+
+      <div class="chat-panel__messages" id="chat-messages"></div>
+      <div class="chat-panel__quick" id="chat-quick"></div>
+
+      <div class="chat-panel__input-area">
+        <textarea
+          class="chat-panel__input"
+          id="chat-input"
+          placeholder="请输入您的问题…"
+          rows="1"
+          aria-label="输入问题"
+        ></textarea>
+        <button class="chat-panel__send" id="chat-send" aria-label="发送">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <button class="chat-widget__toggle" id="chat-toggle" aria-label="打开 AI 问答">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
+      </svg>
+      <span class="chat-widget__toggle-text">AI 答疑</span>
+    </button>
+  </div>
+
+  <script src="js/ai-config.js"></script>
+  <script src="js/ai-client.js"></script>
+  <script src="js/rishengchang-config.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/chat.js"></script>
+  <script>
+    document.getElementById("back-to-map")?.addEventListener("click", () => {
+      if (window.parent && window.parent !== window) {
+        window.parent.postMessage("close-spot-overlay", "*");
+        return;
+      }
+      window.location.href = "index.html";
+    });
+  </script>
+</body>
+</html>

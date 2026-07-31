@@ -1,0 +1,4 @@
+bracelet_size 198 195
+place 628 199
+bowl 154 119 479 420
+img 1024 575
