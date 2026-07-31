@@ -42,29 +42,10 @@
 
   async function fetchReply(question) {
     if (typeof askDoubao === "function") {
-      try {
-        return await askDoubao(question, TOPIC);
-      } catch (err) {
-        console.warn("直调豆包失败，尝试本地 API / 模拟回答:", err);
-      }
+      return await askDoubao(question, TOPIC);
     }
-
-    const apiUrl =
-      location.protocol === "file:" ? "http://localhost:3000/api/chat" : API_URL;
-    try {
-      const response = await fetch(apiUrl, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ question, topic: TOPIC }),
-      });
-      if (!response.ok) throw new Error(`API ${response.status}`);
-      const data = await response.json();
-      if (!data?.answer) throw new Error("empty answer");
-      return data.answer;
-    } catch (_) {
-      await new Promise((r) => setTimeout(r, 500 + Math.random() * 400));
-      return mockReply(question);
-    }
+    await new Promise((r) => setTimeout(r, 500 + Math.random() * 400));
+    return mockReply(question);
   }
 
   async function send() {

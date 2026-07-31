@@ -177,13 +177,9 @@ class ChatWidget {
 
     const topic = CHAT_CONFIG.topic || "lacquer";
 
-    // GitHub Pages / 纯前端：浏览器直调豆包
+    // GitHub Pages / 纯前端：浏览器直调豆包（失败直接抛错，不再悄悄用模拟回答）
     if (CHAT_CONFIG.directMode !== false && typeof askDoubao === "function") {
-      try {
-        return await askDoubao(question, topic);
-      } catch (err) {
-        console.warn("直调豆包失败，尝试本地 API / 模拟回答:", err);
-      }
+      return await askDoubao(question, topic);
     }
 
     const apiUrl = this.resolveApiUrl();
