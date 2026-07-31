@@ -59,11 +59,10 @@
     try {
       const answer = await fetchReply(text);
       setBubble(answer, "answer");
-    } catch (_) {
-      setBubble(
-        "连不上豆包。若开着全局梯子，请关掉或把 volces.com 设为直连后再问。",
-        "error"
-      );
+    } catch (err) {
+      console.error("地图书生 AI 失败:", err);
+      const raw = String(err?.message || err || "");
+      setBubble(raw || "书生暂时答不上来，请稍后再问。", "error");
     } finally {
       loading = false;
       sendBtn.disabled = false;
