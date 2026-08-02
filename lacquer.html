@@ -7,7 +7,7 @@
   <title>平遥推光漆器博物馆 | 数游晋中</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Liu+Jian+Mao+Cao&family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@400;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/styles.css" />
   <link rel="stylesheet" href="css/workshop.css" />
   <link rel="stylesheet" href="css/workshop-tour.css" />
@@ -209,16 +209,23 @@
     </div>
   </div>
 
-  <!-- 车间参观视频二级页 -->
+  <!-- 车间参观：3D 漫游 + 原片视频 -->
   <div class="tour-overlay" id="tour-overlay" aria-hidden="true">
     <div class="tour-overlay__bar">
       <span class="tour-overlay__title">车间参观</span>
+      <div class="tour-overlay__modes" role="group" aria-label="参观方式">
+        <button class="tour-mode-btn is-active" id="tour-mode-3d" type="button">3D漫游</button>
+        <button class="tour-mode-btn" id="tour-mode-video" type="button">原片视频</button>
+      </div>
       <button class="tour-overlay__close" id="tour-close" type="button">退出</button>
     </div>
     <div class="tour-overlay__stage">
+      <div class="tour-3d" id="tour-3d"></div>
+      <p class="tour-hint" id="tour-hint">点击画面锁定鼠标 · WASD 移动 · Shift 下蹲 · Esc 释放鼠标</p>
       <video
         class="tour-overlay__video"
         id="tour-video"
+        hidden
         controls
         playsinline
         preload="metadata"
@@ -240,7 +247,9 @@
   <script src="js/workshop-paint.js?v=16"></script>
   <script src="js/workshop-polish.js?v=4"></script>
   <script src="js/workshop-bracelet.js?v=10"></script>
-  <script src="js/workshop-tour.js"></script>
+  <script src="vendor/three.min.js"></script>
+  <script src="js/workshop-3d.js?v=150"></script>
+  <script src="js/workshop-tour.js?v=2"></script>
   <script>
     document.getElementById("back-to-map")?.addEventListener("click", () => {
       if (window.parent && window.parent !== window) {

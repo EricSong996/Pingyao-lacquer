@@ -73,6 +73,33 @@
   background: linear-gradient(180deg, rgba(20, 12, 8, 0.92), rgba(20, 12, 8, 0.55));
 }
 
+.tour-overlay__modes {
+  display: flex;
+  gap: 0.35rem;
+  margin-left: auto;
+  margin-right: 0.35rem;
+}
+
+.tour-mode-btn {
+  border: 1px solid rgba(243, 230, 207, 0.28);
+  background: transparent;
+  color: rgba(243, 230, 207, 0.75);
+  font-family: var(--font-serif);
+  font-size: 0.8rem;
+  letter-spacing: 0.12em;
+  padding: 0.32rem 0.7rem;
+  cursor: pointer;
+}
+
+.tour-mode-btn.is-active,
+.tour-mode-btn:hover,
+.tour-mode-btn:focus-visible {
+  color: #f7edd8;
+  border-color: rgba(232, 197, 71, 0.55);
+  background: rgba(243, 230, 207, 0.1);
+  outline: none;
+}
+
 .tour-overlay__title {
   font-family: var(--font-serif);
   font-size: 1rem;
@@ -106,12 +133,50 @@
 }
 
 .tour-overlay__stage {
+  position: relative;
   flex: 1;
   min-height: 0;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 0.5rem 1rem 1.25rem;
+}
+
+.tour-3d {
+  position: absolute;
+  inset: 0.5rem 1rem 1.25rem;
+  overflow: hidden;
+  background: #9aa3a8;
+  border-radius: 4px;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.45);
+  cursor: crosshair;
+}
+
+.tour-3d canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.tour-3d.is-locked {
+  cursor: none;
+}
+
+.tour-hint {
+  position: absolute;
+  left: 50%;
+  bottom: 1.6rem;
+  transform: translateX(-50%);
+  z-index: 2;
+  margin: 0;
+  padding: 0.45rem 0.85rem;
+  border-radius: 999px;
+  background: rgba(14, 10, 8, 0.62);
+  color: #f3e6cf;
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  pointer-events: none;
+  white-space: nowrap;
 }
 
 .tour-overlay__video {
