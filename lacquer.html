@@ -23,7 +23,7 @@
   </nav>
 
   <!-- 左侧：车间参观（纯文字高亮入口） -->
-  <button class="tour-entry" id="tour-entry" type="button" aria-label="打开车间参观视频">
+  <button class="tour-entry" id="tour-entry" type="button" aria-label="打开车间 3D 参观">
     <span class="tour-entry__text">车间参观</span>
   </button>
 
@@ -211,31 +211,15 @@
     </div>
   </div>
 
-  <!-- 车间参观：3D 漫游 + 原片视频 -->
+  <!-- 车间参观：3D 漫游 -->
   <div class="tour-overlay" id="tour-overlay" aria-hidden="true">
     <div class="tour-overlay__bar">
       <span class="tour-overlay__title">车间参观</span>
-      <div class="tour-overlay__modes" role="group" aria-label="参观方式">
-        <button class="tour-mode-btn is-active" id="tour-mode-3d" type="button">3D漫游</button>
-        <button class="tour-mode-btn" id="tour-mode-video" type="button">原片视频</button>
-      </div>
       <button class="tour-overlay__close" id="tour-close" type="button">退出</button>
     </div>
     <div class="tour-overlay__stage">
       <div class="tour-3d" id="tour-3d"></div>
       <p class="tour-hint" id="tour-hint">点击画面锁定鼠标 · WASD 移动 · Shift 下蹲 · Esc 释放鼠标</p>
-      <video
-        class="tour-overlay__video"
-        id="tour-video"
-        hidden
-        controls
-        playsinline
-        preload="metadata"
-        controlslist="nodownload"
-        src="videos/workshop-tour.mp4"
-      >
-        您的浏览器暂不支持视频播放。
-      </video>
     </div>
   </div>
 
@@ -251,7 +235,7 @@
   <script src="js/workshop-bracelet.js?v=10"></script>
   <script src="vendor/three.min.js"></script>
   <script src="js/workshop-3d.js?v=150"></script>
-  <script src="js/workshop-tour.js?v=2"></script>
+  <script src="js/workshop-tour.js?v=3"></script>
   <script>
     document.getElementById("back-to-map")?.addEventListener("click", () => {
       if (window.parent && window.parent !== window) {

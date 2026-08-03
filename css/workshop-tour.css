@@ -1,4 +1,4 @@
-/* 车间参观：左侧纯文字入口 + 视频二级页 */
+/* 车间参观：左侧纯文字入口 + 3D 漫游 */
 
 .tour-entry {
   position: fixed;
@@ -71,33 +71,6 @@
   gap: 1rem;
   padding: 0.85rem 1.25rem;
   background: linear-gradient(180deg, rgba(20, 12, 8, 0.92), rgba(20, 12, 8, 0.55));
-}
-
-.tour-overlay__modes {
-  display: flex;
-  gap: 0.35rem;
-  margin-left: auto;
-  margin-right: 0.35rem;
-}
-
-.tour-mode-btn {
-  border: 1px solid rgba(243, 230, 207, 0.28);
-  background: transparent;
-  color: rgba(243, 230, 207, 0.75);
-  font-family: var(--font-serif);
-  font-size: 0.8rem;
-  letter-spacing: 0.12em;
-  padding: 0.32rem 0.7rem;
-  cursor: pointer;
-}
-
-.tour-mode-btn.is-active,
-.tour-mode-btn:hover,
-.tour-mode-btn:focus-visible {
-  color: #f7edd8;
-  border-color: rgba(232, 197, 71, 0.55);
-  background: rgba(243, 230, 207, 0.1);
-  outline: none;
 }
 
 .tour-overlay__title {
@@ -177,14 +150,6 @@
   letter-spacing: 0.08em;
   pointer-events: none;
   white-space: nowrap;
-}
-
-.tour-overlay__video {
-  width: min(100%, 1200px);
-  max-height: 100%;
-  background: #000;
-  border-radius: 4px;
-  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.45);
 }
 
 @media (max-width: 720px) {
