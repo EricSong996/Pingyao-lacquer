@@ -1,0 +1,117 @@
+/* 全站访问门禁 — 暗色漆器博物馆风格 */
+html.site-locked {
+  background: #1a1410;
+}
+
+html.site-locked body {
+  overflow: hidden;
+}
+
+html.site-locked body > *:not(#site-gate) {
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+#site-gate {
+  position: fixed;
+  inset: 0;
+  z-index: 2147483646;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  visibility: visible !important;
+  pointer-events: auto !important;
+  background:
+    radial-gradient(ellipse at 50% 20%, rgba(139, 26, 26, 0.22), transparent 55%),
+    linear-gradient(160deg, #1a1410 0%, #2a1c14 45%, #1a1410 100%);
+  font-family: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+  color: #f5f0e8;
+}
+
+.site-gate__panel {
+  width: min(100%, 360px);
+  text-align: center;
+}
+
+.site-gate__title {
+  margin: 0 0 10px;
+  font-family: "Noto Serif SC", "Source Han Serif SC", "SimSun", serif;
+  font-size: 1.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: #c9a227;
+}
+
+.site-gate__hint {
+  margin: 0 0 28px;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: rgba(245, 240, 232, 0.72);
+}
+
+.site-gate__form {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 12px;
+}
+
+.site-gate__label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.site-gate__input {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid rgba(245, 240, 232, 0.28);
+  border-radius: 6px;
+  background: rgba(245, 240, 232, 0.06);
+  color: #f5f0e8;
+  font-size: 1rem;
+  letter-spacing: 0.08em;
+  outline: none;
+  transition: border-color 0.35s cubic-bezier(0.4, 0, 0.2, 1), background 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.site-gate__input:focus {
+  border-color: #c9a227;
+  background: rgba(201, 162, 39, 0.08);
+}
+
+.site-gate__submit {
+  margin-top: 4px;
+  padding: 12px 16px;
+  border: 1px solid rgba(201, 162, 39, 0.55);
+  border-radius: 6px;
+  background: rgba(201, 162, 39, 0.18);
+  color: #f5f0e8;
+  font-size: 0.95rem;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  transition: background 0.35s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.site-gate__submit:hover {
+  background: rgba(201, 162, 39, 0.3);
+  border-color: #c9a227;
+}
+
+.site-gate__error {
+  margin: 4px 0 0;
+  min-height: 1.2em;
+  font-size: 0.85rem;
+  color: #d45a5a;
+}
+
+.site-gate__error[hidden] {
+  display: none;
+}
